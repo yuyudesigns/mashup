@@ -1,8 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Mashup</title>
-  </head>
-  <body>
-  </body>
+<head>
+    <title>Intro to jQuery Mobile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnSearch").click(function () {
+                $("#youtube").html("");
+                var searchTerm = "";
+                if (!$("#search").val() == "") {
+                    searchTerm = $("#search").val();
+                }
+                else {
+                    alert("You must enter a search term!");
+                }
+                var url = "http://gdata.youtube.com/feeds/api/videos?vq=" + searchTerm + "&max-results=5&orderby=relevance&alt=json";
+                $.getJSON(url, function (data) {
+                    $.each(data.feed.entry, function (i, item) {
+                        var link = item.link[0].href;
+                        var title = item.title.$t;
+                        var thumbnailURL = item.media$group.media$thumbnail[0].url;
+                        var text = '<div data-role="collapsible" data-collapsed="false"><h3>' + title + "</h3><p><a href='" + link + "'><img src='" + thumbnailURL + "' /></a></p></div>"
+                        $("#youtube").append(text).trigger('create');
+                    });
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+    <div data-role="page">
+	    <header data-role="header" data-position="fixed" data-theme="a">
+			<h1>YouTube</h1>
+		</header>
+		<article data-role="content">
+           enter keyword:<input type="text" id="search">
+    	   <a href="#" data-role="button" id="btnSearch">search</a>
+           <div data-role="collapsible-set" id="cust">
+           	  <div id="youtube"></div>
+           </div>
+		</article>
+		<footer data-role="footer" data-position="fixed" data-id="rps">
+		    <nav data-role="navbar">
+				<ul>
+					<li><a data-icon="star" href="xxx" data-transition="fade">Rock</a></li>
+					<li><a data-icon="grid" class="ui-btn-active ui-state-persist" data-transition="fade">YouTube</a></li>
+					<li><a data-icon="check" href="xxx" data-transition="fade">Scissors</a></li>
+				</ul>
+			</nav>
+	</footer>
+    </div>
+</body>
 </html>
